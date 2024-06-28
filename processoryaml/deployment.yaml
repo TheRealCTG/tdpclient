@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ota-processors
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ota-processor
+  template:
+    metadata:
+      labels:
+        app: ota-processor
+    spec:
+      containers:
+      - name: ota-proc-container
+        image: 172.27.56.53:5000/processorimage
+        ports:
+        - containerPort: 8090
