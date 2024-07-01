@@ -43,7 +43,7 @@ pub fn load_config_data() -> Result<AppState,&'static str> {
 
     let suppierhohsturl = "http://".to_string() + &supplierhostname+ ":"+
     &supplierport.to_string() +"/api/supplier?supplier_id=";
-    println!("Supplier Host URL: {}", suppierhohsturl.clone());
+    //println!("Supplier Host URL: {}", suppierhohsturl.clone());
     // format!("{0}{1}{2}{3}{4}","http://", 
     // supplierhostname.to_string(),":",supplierport.to_string(),  "/api/supplier?supplierId=");
     // println!("Supplier Host URL: {}", suppierhohsturl.clone());

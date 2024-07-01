@@ -121,7 +121,7 @@ pub async fn get_accomodation_handler(data: web::Data<AppState>) -> impl Respond
  //
  pub async fn get_accommodation_by_supplier(supplier_id: i32,hostname:String) -> Result<String, ProcessorCallError>  {
     let url = format!("{0}{1}",hostname, supplier_id);
-    println!("URL: {}", url);
+   // println!("URL: {}", url);
   
     let body = match reqwest::get(url).await {
         Ok(response) => match response.text().await {
