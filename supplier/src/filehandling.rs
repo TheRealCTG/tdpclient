@@ -8,7 +8,7 @@ use std::time::Duration;
 use serde::Serialize;
 use serde::Deserialize;
 use actix_web::{web, HttpResponse, Responder};
-
+use rand::Rng;
 
 #[derive(Serialize)]
 // struct ApiResponse {
@@ -29,11 +29,14 @@ pub async  fn get_supplier(info: web::Query<Info>, data: web::Data<AppState>) ->
   let supplier_id = &info.supplier_id;
   let filecontent = data.filecontent.clone();
  // println!("Supplier ID: {}", supplier_id);
+ let max_sleep_simulation_time: u64 = 4;
   match supplier_id.parse::<i32>() {
     Ok(index) => {
         
             //write a code for getting random number from 1 to 5 without seed
-            let random_number = rand::random::<u64>() % 4 + 1;
+            let random_number = rand::thread_rng().gen_range(0..max_sleep_simulation_time) + 1;
+            
+            //rand::random::<u64>() % 4 + 1;
            // println!("Random number: {}", random_number);
             task::sleep(Duration::from_secs(random_number)).await;
             let uindex = index as usize;

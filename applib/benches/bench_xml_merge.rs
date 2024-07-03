@@ -3,7 +3,7 @@ use tokio::runtime::Runtime;
 
 use applib::xmlutil::{read_file, read_text_in_node};
 use mockito::ServerGuard;
-use applib::get_hotel_accomodations_from_Suppliers;
+use applib::get_hotel_accomodations_from_suppliers;
 
 async fn get_supplier_url_mock(server: &mut ServerGuard, supplier: &str, buf: &[u8]) -> mockito::Mock {
     let supplierpath = format!("/{}", supplier);
@@ -54,7 +54,7 @@ fn criterion_benchmark(c: &mut Criterion) {
                 (rt, suppliers, url)
             },
             |(rt, suppliers, url)| {
-                rt.block_on(get_hotel_accomodations_from_Suppliers(suppliers, &url)).unwrap();
+                rt.block_on(get_hotel_accomodations_from_suppliers(suppliers, &url)).unwrap();
             },
         );
     });

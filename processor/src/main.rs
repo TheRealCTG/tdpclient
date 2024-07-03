@@ -5,7 +5,9 @@ extern crate rand;
 extern crate reqwest;
 extern crate quick_xml;
 extern crate serde;
-use actix_web::{web, HttpServer,App};
+extern crate uuid;
+extern crate hex;
+use actix_web::{web, HttpServer,App, middleware};
 
 mod definitions;
  mod processing;
@@ -32,6 +34,7 @@ async fn main() -> std::io::Result<()> {
     println!("Starting the server");
     HttpServer::new(move || {
         App::new()
+            //.wrap(middleware::Compress::default())
             .app_data(confidata.clone())
             .route("/api/get-accomodations/", web::get().to(get_accomodation_handler))
     }).bind(("0.0.0.0", 8090))?

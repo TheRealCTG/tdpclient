@@ -2,6 +2,7 @@
 // use awc::cookie::time::Instant;
 use rand::{thread_rng, Rng};
 use sha2::{Sha256, Digest};
+use uuid::Uuid;
 //use std::time::{Instant};
 #[derive(Clone)]
 pub struct AppState {
@@ -46,7 +47,7 @@ pub fn load_config_data() -> Result<AppState,&'static str> {
     //println!("Supplier Host URL: {}", suppierhohsturl.clone());
     // format!("{0}{1}{2}{3}{4}","http://", 
     // supplierhostname.to_string(),":",supplierport.to_string(),  "/api/supplier?supplierId=");
-    // println!("Supplier Host URL: {}", suppierhohsturl.clone());
+   println!("Supplier Host URL: {}", suppierhohsturl.clone());
    Ok(AppState {
     max_noofsuppliers_forrandomness: max_noofsuppliers_forrandomness.parse::<u64>().unwrap(),
     min_cpu_usage_in_milliseconds: min_cpu_usage_in_milliseconds.parse::<u64>().unwrap(),
@@ -60,30 +61,37 @@ pub fn load_config_data() -> Result<AppState,&'static str> {
 
 pub fn simulate_cpu_usage(ref xml_document:String, confidata: AppState) {
     //let simtime = Instant::now();
-    let mut merged_doc: Vec<String> = Vec::new();
-    let min_cpu_usage_in_milliseconds = confidata.min_cpu_usage_in_milliseconds;
+    //let mut merged_doc: Vec<String> = Vec::new();
+    //let min_cpu_usage_in_milliseconds = confidata.min_cpu_usage_in_milliseconds;
     let max_cpu_usage_in_milliseconds =confidata.max_cpu_usage_in_milliseconds;
     let mut rng = thread_rng();
-    let valdata = rng.gen_range(min_cpu_usage_in_milliseconds..max_cpu_usage_in_milliseconds);
+    let delayduration = rng.gen_range(0..max_cpu_usage_in_milliseconds);
     let loop_till_time = std::time::Instant::now() +
    //  std::time::Duration::from_millis(valdata + max_cpu_usage_in_milliseconds);
-    std::time::Duration::from_millis(valdata);
-
+    std::time::Duration::from_millis(delayduration);
+    
+	let mut   loop_counter = 0;
     if xml_document.len() > 0 {
         while std::time::Instant::now() < loop_till_time {
            // merged_doc.push(xml_document.clone());
            let _xml_hash = create_hash(&xml_document);
+           loop_counter = loop_counter + 1;
         }
     }
 
-    merged_doc.clear();
+   // merged_doc.clear();
     //println!("simulate_cpu_usage took in milli seconds{:?}", simtime.elapsed().as_millis());
     //*xml_document = String::new();    
 }
 
 fn create_hash(xml_document: &str) -> String {
+    let text = format!("{}{}", xml_document, create_new_guid());
     let mut hasher = Sha256::new();
-    hasher.update(xml_document);
-    let result = hasher.finalize();
-    format!("{:x}", result)
+    hasher.update(text.as_bytes());
+    hex::encode(hasher.finalize())
+}
+
+fn create_new_guid() -> String {
+    let new_guid = Uuid::new_v4();
+    new_guid.to_string()
 }

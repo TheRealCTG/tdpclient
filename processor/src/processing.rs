@@ -38,18 +38,14 @@ pub async fn get_accomodation_handler(data: web::Data<AppState>) -> impl Respond
 
     let max_noofsuppliers_forrandomness = configdata.max_noofsuppliers_forrandomness.to_string();
     // //convert string to integer
-    let irand = max_noofsuppliers_forrandomness.parse::<u32>().unwrap();
+    let irand: u32 = max_noofsuppliers_forrandomness.parse::<u32>().unwrap();
 
     let mut rng = thread_rng();
-    let mut max_no_of_supplier: u32 = rng.gen_range(0..irand);
+    let  max_no_of_supplier: u32 = rng.gen_range(0..irand) + 1;
 
     let mut supplier_from_index = rng.gen_range(0..supplier_list.len());
    
-    let mut suppliers: Vec<i32> = Vec::new();
-    if max_no_of_supplier == 0 {
-      
-        max_no_of_supplier = 1;
-    }
+    let mut suppliers: Vec<i32> = Vec::new();   
     
     for _i in 0..max_no_of_supplier {
         suppliers.push(supplier_list[supplier_from_index]);
@@ -81,7 +77,11 @@ pub async fn get_accomodation_handler(data: web::Data<AppState>) -> impl Respond
              };
             let res = match extract_nodes_from_xml(data.to_string(), "Hotel".into()).await {
                 Ok(res) => res,
-                Err(error) => panic!("Error: {}", error),
+                Err(_error) => {
+                    println!("Error in converting to string for xml data");
+                    "".to_string();
+                    return; 
+                },
               };   
             let strval = match String::from_utf8(res.0)
             {
@@ -89,7 +89,8 @@ pub async fn get_accomodation_handler(data: web::Data<AppState>) -> impl Respond
                 Err(_err) => {
                     
                                println!("Error in converting to string for xml data");
-                                "".to_string()
+                                "".to_string();
+                                return; 
                 }
             };
             let mut result = resultc.lock().await;   
@@ -121,7 +122,7 @@ pub async fn get_accomodation_handler(data: web::Data<AppState>) -> impl Respond
  //
  pub async fn get_accommodation_by_supplier(supplier_id: i32,hostname:String) -> Result<String, ProcessorCallError>  {
     let url = format!("{0}{1}",hostname, supplier_id);
-   // println!("URL: {}", url);
+    //println!("URL: {}", url);
   
     let body = match reqwest::get(url).await {
         Ok(response) => match response.text().await {

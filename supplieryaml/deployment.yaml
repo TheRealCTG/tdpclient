@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: ota-suppliers
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: ota-supplier
@@ -15,5 +15,6 @@ spec:
       containers:
       - name: ota-supp-container
         image: 172.27.56.53:5000/supplierimage
+        imagePullPolicy: Always
         ports:
         - containerPort: 8080

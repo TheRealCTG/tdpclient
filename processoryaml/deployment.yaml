@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: ota-processors
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: ota-processor
@@ -15,5 +15,6 @@ spec:
       containers:
       - name: ota-proc-container
         image: 172.27.56.53:5000/processorimage
+        imagePullPolicy: Always
         ports:
         - containerPort: 8090
