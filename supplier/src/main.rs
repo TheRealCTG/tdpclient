@@ -2,8 +2,8 @@
 
 extern crate rand;
 extern crate actix_web;
-use actix_web::{ App,  HttpServer};
-use actix_web::web::Data;
+
+use actix_web::{web::Data, middleware, App,  HttpServer};
 mod filehandling;
 mod definitions;
 use  filehandling::{AppState,load_all_files,get_supplier};
@@ -21,9 +21,10 @@ use  filehandling::{AppState,load_all_files,get_supplier};
       filecontent: filedata
   });
 
-
+    println!("Server Started");
     HttpServer::new(move || {
       App::new()
+        .wrap(middleware::Compress::default())
         .app_data(supplier_files.clone())
         .route("/api/supplier", actix_web::web::get().to(get_supplier))
     })

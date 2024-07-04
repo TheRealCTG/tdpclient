@@ -37,11 +37,13 @@ pub async fn get_accomodation_handler(data: web::Data<AppState>) -> impl Respond
     let supplier_list = vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
     let max_noofsuppliers_forrandomness = configdata.max_noofsuppliers_forrandomness.to_string();
+    let min_noofsuppliers_forrandomness = configdata.min_noofsuppliers_forrandomness.to_string();
     // //convert string to integer
-    let irand: u32 = max_noofsuppliers_forrandomness.parse::<u32>().unwrap();
+    let imax_rand: u32 = max_noofsuppliers_forrandomness.parse::<u32>().unwrap();
+    let imin_rand: u32 = min_noofsuppliers_forrandomness.parse::<u32>().unwrap();
 
     let mut rng = thread_rng();
-    let  max_no_of_supplier: u32 = rng.gen_range(0..irand) + 1;
+    let  max_no_of_supplier: u32 = rng.gen_range(imin_rand..imax_rand);
 
     let mut supplier_from_index = rng.gen_range(0..supplier_list.len());
    
@@ -70,26 +72,23 @@ pub async fn get_accomodation_handler(data: web::Data<AppState>) -> impl Respond
                  Ok(data) => {
                     data
                  },
-                 Err(err) => { 
-                     println!("{}", err);
+                 Err(error) => { 
+                     println!("{}", error);
                      return; 
                  }
              };
             let res = match extract_nodes_from_xml(data.to_string(), "Hotel".into()).await {
                 Ok(res) => res,
-                Err(_error) => {
-                    println!("Error in converting to string for xml data");
-                    "".to_string();
+                Err(error) => {
+                    println!("{}", error);
                     return; 
                 },
               };   
             let strval = match String::from_utf8(res.0)
             {
                 Ok(strval) => strval,
-                Err(_err) => {
-                    
-                               println!("Error in converting to string for xml data");
-                                "".to_string();
+                Err(error) => {
+                                println!("{}", error);
                                 return; 
                 }
             };

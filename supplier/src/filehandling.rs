@@ -26,6 +26,7 @@ pub struct Info {
 
 pub async  fn get_supplier(info: web::Query<Info>, data: web::Data<AppState>) -> impl Responder {
   //let start = Instant::now();
+  
   let supplier_id = &info.supplier_id;
   let filecontent = data.filecontent.clone();
  // println!("Supplier ID: {}", supplier_id);
@@ -84,7 +85,8 @@ pub fn load_all_files() -> Result<Vec<String>, SupplierCallError>{
                     let mut content = String::new();
                     match file.read_to_string(&mut content)
                     {
-                        Ok(_) => {                         
+                        Ok(_) => {    
+                           // println!("File content: {}", content);                     
                             filecontent.push(content);                                   
                         },
                         Err(e) =>  {

@@ -6,6 +6,7 @@ use uuid::Uuid;
 //use std::time::{Instant};
 #[derive(Clone)]
 pub struct AppState {
+    pub min_noofsuppliers_forrandomness: u64,
     pub  max_noofsuppliers_forrandomness: u64,
     pub min_cpu_usage_in_milliseconds: u64,
     pub  max_cpu_usage_in_milliseconds: u64, 
@@ -15,6 +16,11 @@ pub struct AppState {
 pub fn load_config_data() -> Result<AppState,&'static str> {
 
     let app_ini = ini!(r"app.ini");
+    let min_noofsuppliers_forrandomness  = match app_ini["section1"]["minnoofsuppliersforrandomness"].as_ref() 
+    {
+        Some(value) => value.clone(),
+        None => return Err("minnoofsuppliers is not found in app.ini")
+    };
     let max_noofsuppliers_forrandomness = match app_ini["section1"]["maxnoofsuppliersforrandomness"].as_ref() 
     {
         Some(value) => value.clone(),
@@ -49,6 +55,7 @@ pub fn load_config_data() -> Result<AppState,&'static str> {
     // supplierhostname.to_string(),":",supplierport.to_string(),  "/api/supplier?supplierId=");
    println!("Supplier Host URL: {}", suppierhohsturl.clone());
    Ok(AppState {
+    min_noofsuppliers_forrandomness: min_noofsuppliers_forrandomness.parse::<u64>().unwrap(),
     max_noofsuppliers_forrandomness: max_noofsuppliers_forrandomness.parse::<u64>().unwrap(),
     min_cpu_usage_in_milliseconds: min_cpu_usage_in_milliseconds.parse::<u64>().unwrap(),
     max_cpu_usage_in_milliseconds: max_cpu_usage_in_milliseconds.parse::<u64>().unwrap(),    
@@ -59,29 +66,21 @@ pub fn load_config_data() -> Result<AppState,&'static str> {
 
 
 
-pub fn simulate_cpu_usage(ref xml_document:String, confidata: AppState) {
-    //let simtime = Instant::now();
-    //let mut merged_doc: Vec<String> = Vec::new();
-    //let min_cpu_usage_in_milliseconds = confidata.min_cpu_usage_in_milliseconds;
-    let max_cpu_usage_in_milliseconds =confidata.max_cpu_usage_in_milliseconds;
+pub fn simulate_cpu_usage(ref xml_document:String, confidata: AppState) {  
+    let max_cpu_usage_for_in_milliseconds = confidata.max_cpu_usage_in_milliseconds;
+    let min_cpu_usage_for_in_milliseconds = confidata.min_cpu_usage_in_milliseconds;
     let mut rng = thread_rng();
-    let delayduration = rng.gen_range(0..max_cpu_usage_in_milliseconds);
-    let loop_till_time = std::time::Instant::now() +
-   //  std::time::Duration::from_millis(valdata + max_cpu_usage_in_milliseconds);
-    std::time::Duration::from_millis(delayduration);
-    
+    let delayduration = rng.gen_range(min_cpu_usage_for_in_milliseconds..max_cpu_usage_for_in_milliseconds);
+
+    let loop_till_time = std::time::Instant::now() +  std::time::Duration::from_millis(delayduration);
+   
 	let mut   loop_counter = 0;
     if xml_document.len() > 0 {
-        while std::time::Instant::now() < loop_till_time {
-           // merged_doc.push(xml_document.clone());
+        while std::time::Instant::now() < loop_till_time {           
            let _xml_hash = create_hash(&xml_document);
            loop_counter = loop_counter + 1;
         }
     }
-
-   // merged_doc.clear();
-    //println!("simulate_cpu_usage took in milli seconds{:?}", simtime.elapsed().as_millis());
-    //*xml_document = String::new();    
 }
 
 fn create_hash(xml_document: &str) -> String {
