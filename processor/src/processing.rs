@@ -65,7 +65,7 @@ pub async fn get_accomodation_handler(data: web::Data<AppState>) -> impl Respond
       
          let resultc = Arc::clone(&result);
          let counter = Arc::clone(&counter);
-         let hostname =  configdata.supplierhosturl.clone();
+         let hostname =  configdata.adaptorhosturl.clone();
          let isupplierdata = supplier.clone();         
          let handle = tokio::task::spawn(async move {          
              let data = match  get_accommodation_by_supplier(isupplierdata,hostname.clone()).await {
@@ -126,9 +126,9 @@ pub async fn get_accomodation_handler(data: web::Data<AppState>) -> impl Respond
     let body = match reqwest::get(url).await {
         Ok(response) => match response.text().await {
             Ok(body) => body,
-            Err(_err) => return Err(ProcessorCallError::Error("Error in getting response from supplier".to_string()))
+            Err(_err) => return Err(ProcessorCallError::Error("Error in getting response from adaptor".to_string()))
         },
-        Err(_err) => return Err(ProcessorCallError::Error("Error in getting response from supplier".to_string()))
+        Err(_err) => return Err(ProcessorCallError::Error("Error in getting response from adaptor".to_string()))
     };   
 
 

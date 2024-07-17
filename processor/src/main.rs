@@ -34,7 +34,7 @@ async fn main() -> std::io::Result<()> {
     println!("Starting the server");
     HttpServer::new(move || {
         App::new()
-            .wrap(middleware::Compress::default())
+            //.wrap(middleware::Compress::default())
             .app_data(confidata.clone())
             .route("/api/get-accomodations/", web::get().to(get_accomodation_handler))
     }).bind(("0.0.0.0", 8090))?

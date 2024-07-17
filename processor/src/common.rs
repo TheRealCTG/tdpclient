@@ -10,7 +10,8 @@ pub struct AppState {
     pub  max_noofsuppliers_forrandomness: u64,
     pub min_cpu_usage_in_milliseconds: u64,
     pub  max_cpu_usage_in_milliseconds: u64, 
-    pub supplierhosturl: String
+    pub adaptorhosturl: String,
+    
  }
 
 pub fn load_config_data() -> Result<AppState,&'static str> {
@@ -36,30 +37,46 @@ pub fn load_config_data() -> Result<AppState,&'static str> {
         Some(value) => value.clone(),
         None => return Err("maxcpuusageinmilliseconds is not found in app.ini")
     };
-    let supplierhostname = match app_ini["section1"]["supplierhostname"].as_ref()
+
+
+
+    let adaptorhostname = match app_ini["section1"]["adapterhostname"].as_ref()
     {
         Some(value) => value.clone(),
-        None => return Err("supplierhostname is not found in app.ini")
+        None => return Err("adaptorhostname is not found in app.ini")
     };
 
-    let supplierport = match app_ini["section1"]["supplierport"].as_ref()
+    let adaptorport = match app_ini["section1"]["adapterport"].as_ref()
     {
         Some(value) => value.clone(),
-        None => return Err("supplierport is not found in app.ini")
+        None => return Err("adaptorport is not found in app.ini")
     };
+    // let supplierhostname = match app_ini["section1"]["supplierhostname"].as_ref()
+    // {
+    //     Some(value) => value.clone(),
+    //     None => return Err("supplierhostname is not found in app.ini")
+    // };
 
-    let suppierhohsturl = "http://".to_string() + &supplierhostname+ ":"+
-    &supplierport.to_string() +"/api/supplier?supplier_id=";
+    // let supplierport = match app_ini["section1"]["supplierport"].as_ref()
+    // {
+    //     Some(value) => value.clone(),
+    //     None => return Err("supplierport is not found in app.ini")
+    // };
+
+    let addaptorhosturl = "http://".to_string() + &adaptorhostname+ ":"+
+    &adaptorport.to_string() +"/api/adapter/supplier?supplier_id=";
+
+    //"/api/supplier?supplier_id=";
     //println!("Supplier Host URL: {}", suppierhohsturl.clone());
     // format!("{0}{1}{2}{3}{4}","http://", 
     // supplierhostname.to_string(),":",supplierport.to_string(),  "/api/supplier?supplierId=");
-   println!("Supplier Host URL: {}", suppierhohsturl.clone());
+   println!("Supplier Host URL: {}", addaptorhosturl.clone());
    Ok(AppState {
     min_noofsuppliers_forrandomness: min_noofsuppliers_forrandomness.parse::<u64>().unwrap(),
     max_noofsuppliers_forrandomness: max_noofsuppliers_forrandomness.parse::<u64>().unwrap(),
     min_cpu_usage_in_milliseconds: min_cpu_usage_in_milliseconds.parse::<u64>().unwrap(),
     max_cpu_usage_in_milliseconds: max_cpu_usage_in_milliseconds.parse::<u64>().unwrap(),    
-    supplierhosturl: suppierhohsturl.clone()
+    adaptorhosturl: addaptorhosturl.clone()
 }) 
 }
 
@@ -84,6 +101,9 @@ pub fn simulate_cpu_usage(ref xml_document:String, confidata: AppState) {
 }
 
 fn create_hash(xml_document: &str) -> String {
+    if xml_document.len() == 0 {
+        return String::new();
+    }
     let text = format!("{}{}", xml_document, create_new_guid());
     let mut hasher = Sha256::new();
     hasher.update(text.as_bytes());

@@ -1,6 +1,6 @@
 [workspace]
 
-members = [ "applib", "processor", "supplier"]
+members = [ "applib", "processor", "supplier", "adapter"]
 
 [workspace.dependencies]
 actix-web = "4"
