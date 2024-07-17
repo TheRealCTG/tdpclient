@@ -21,4 +21,4 @@ COPY --from=builder /app/adapter/app_adpater.ini ./app_adpater.ini
 EXPOSE 9000
 
 # Set the binary as the entrypoint of the container
-ENTRYPOINT ["./adpater"]
+ENTRYPOINT ["./adapter"]
