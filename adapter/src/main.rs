@@ -23,7 +23,7 @@ use common::{load_config_data,adapterhandler, AppState};
 
     
 
-    let confidata = web::Data::new(appdata);;
+    let confidata = web::Data::new(appdata);
 
     println!("Server Started");
     HttpServer::new(move || {
