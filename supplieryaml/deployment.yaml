@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: ota-supp-container
-        image: 172.27.56.53:5000/supplierimage
+        image: 795914468022.dkr.ecr.us-east-1.amazonaws.com/online-travel-agency:supp-latest-rust
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: ota-adap-container
-        image:  172.27.56.53:5000/adapterimage
+        image:  795914468022.dkr.ecr.us-east-1.amazonaws.com/online-travel-agency:adap-latest-rust
         imagePullPolicy: Always
         ports:
         - containerPort: 9000
