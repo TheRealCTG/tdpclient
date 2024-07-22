@@ -7,7 +7,7 @@ extern crate quick_xml;
 extern crate serde;
 extern crate uuid;
 extern crate hex;
-use actix_web::{web, HttpServer,App, middleware};
+use actix_web::{web, HttpServer,App};//, middleware};
 
 mod definitions;
  mod processing;

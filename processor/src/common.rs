@@ -2,7 +2,7 @@
 // use awc::cookie::time::Instant;
 use rand::{thread_rng, Rng};
 use sha2::{Sha256, Digest};
-use uuid::Uuid;
+//use uuid::Uuid;
 //use std::time::{Instant};
 #[derive(Clone)]
 pub struct AppState {
