@@ -38,10 +38,10 @@ fn criterion_benchmark(c: &mut Criterion) {
 
                 let (suppliers, xml_data) =
                 rt.block_on(get_supplier_data(vec![
-                        "../xmls/sup_1_10001.xml",
-                        "../xmls/sup_1_10002.xml",
-                        "../xmls/sup_1_10003.xml",
-                        "../xmls/sup_1_10004.xml"
+                        "xmls/sup_1_10001.xml",
+                        "xmls/sup_2_10001.xml",
+                        "xmls/sup_3_10001.xml",
+                        "xmls/sup_4_10001.xml"
                     ]));
 
                 let mut server = rt.block_on(mockito::Server::new_async());

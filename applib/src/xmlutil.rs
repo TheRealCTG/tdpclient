@@ -90,7 +90,7 @@ mod tests {
     #[tokio::test]
     async fn test_find_hotels() -> Result<()> {
 
-        let xmlbuf = read_file("../xmls/sup_1_10001.xml").await?;
+        let xmlbuf = read_file("xmls/sup_1_10001.xml").await?;
         let xml = String::from_utf8(xmlbuf)?;
 
         let hotels = read_text_in_node(xml, "Hotels".into()).await?;
@@ -127,7 +127,7 @@ mod tests {
         let res = extract_nodes_from_xml(xml.into(), node.into()).await?;
        
         println!("\nText is: {}", String::from_utf8(res.0).unwrap());
-        println!("\nHotel count {}", res.1);
+       println!("\nHotel count {}", res.1);
 
 
         Ok(())

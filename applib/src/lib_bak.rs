@@ -93,10 +93,10 @@ mod tests {
 
         let (suppliers, xml_data) =
         get_supplier_data(vec![
-            "../xmls/sup_1_10001.xml",
-            "../xmls/sup_1_10002.xml",
-            "../xmls/sup_1_10003.xml",
-            "../xmls/sup_1_10004.xml"
+            "xmls/sup_1_10001.xml",
+            "xmls/sup_1_10002.xml",
+            "xmls/sup_1_10003.xml",
+            "xmls/sup_1_10004.xml"
         ]).await;
 
         let mut server = mockito::Server::new_async().await;

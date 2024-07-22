@@ -104,13 +104,14 @@ fn create_hash(xml_document: &str) -> String {
     if xml_document.len() == 0 {
         return String::new();
     }
-    let text = format!("{}{}", xml_document, create_new_guid());
+    let text = xml_document;
+    //format!("{}{}", xml_document, create_new_guid());
     let mut hasher = Sha256::new();
     hasher.update(text.as_bytes());
     hex::encode(hasher.finalize())
 }
 
-fn create_new_guid() -> String {
-    let new_guid = Uuid::new_v4();
-    new_guid.to_string()
-}
+// fn create_new_guid() -> String {
+//     let new_guid = Uuid::new_v4();
+//     new_guid.to_string()
+// }
