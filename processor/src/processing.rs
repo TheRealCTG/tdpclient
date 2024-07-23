@@ -57,6 +57,7 @@ pub async fn get_accomodation_handler(data: web::Data<AppState>) -> impl Respond
     let mut handles = Vec::new();        
   
     let result =  Arc::new(Mutex::new(String::with_capacity(50000)));
+    let simulatedatares =  Arc::new(Mutex::new(String::with_capacity(5000)));
     let counter = Arc::new(AtomicUsize::new(0));
 
    // println!("get_accomodations called=>enumerate suppliers {}",  suppliers.len());  
@@ -64,7 +65,7 @@ pub async fn get_accomodation_handler(data: web::Data<AppState>) -> impl Respond
     for  supplier in suppliers.iter(){      
       
          let resultc = Arc::clone(&result);
-         let counter = Arc::clone(&counter);
+         let counter = Arc::clone(&counter);       
          let hostname =  configdata.adaptorhosturl.clone();
          let isupplierdata = supplier.clone();         
          let handle = tokio::task::spawn(async move {          
@@ -76,7 +77,8 @@ pub async fn get_accomodation_handler(data: web::Data<AppState>) -> impl Respond
                      println!("{}", error);
                      return; 
                  }
-             };
+             };           
+
             let res = match extract_nodes_from_xml(data.to_string(), "Hotel".into()).await {
                 Ok(res) => res,
                 Err(error) => {
@@ -84,6 +86,9 @@ pub async fn get_accomodation_handler(data: web::Data<AppState>) -> impl Respond
                     return; 
                 },
               };   
+
+              //get counter value
+             
             let strval = match String::from_utf8(res.0)
             {
                 Ok(strval) => strval,
@@ -115,7 +120,8 @@ pub async fn get_accomodation_handler(data: web::Data<AppState>) -> impl Respond
     resultdata.push_str(resdata.as_str());
     resultdata.push_str("\r\n</Hotels>\r\n</HotelFindResponse>");
    
-    simulate_cpu_usage(resultdata.clone(), configdata); 
+   
+   simulate_cpu_usage(configdata.firstsupplierdata.clone(), configdata); 
    Ok(resultdata.to_string())
 }
  //

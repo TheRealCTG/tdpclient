@@ -12,15 +12,21 @@ use actix_web::{web, HttpServer,App};//, middleware};
 mod definitions;
  mod processing;
  mod common;
- use common::{load_config_data, AppState};
+ use common::{load_config_data, AppState,load_file};
  use processing::get_accomodation_handler;
 
 //#[actix_web::main]
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
 
-
-    let appdata: AppState = match load_config_data() {
+    
+    let filedata = match load_file()
+    {
+      Ok(x) => x,
+      Err(e) => panic!("Error: {}", e),
+    };
+  
+    let appdata: AppState = match load_config_data(filedata[0].clone()) {
         Ok(appdata) => appdata,
         Err(err) => {
             println!("{}", err);

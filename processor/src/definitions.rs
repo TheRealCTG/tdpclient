@@ -69,6 +69,12 @@ pub enum ProcessorCallError {
     #[error("error")]
     Error(String),
 
+    #[error("Error Reading file")]
+    FileRedaError,
+
+    #[error("Error Opening file")]
+    FileOpenError, 
+
     // #[error("Error Reading xml")]
     // XmlReadError,
 

@@ -2,6 +2,9 @@
 // use awc::cookie::time::Instant;
 use rand::{thread_rng, Rng};
 use sha2::{Sha256, Digest};
+use crate::definitions::ProcessorCallError;
+use std::fs;
+use std::io::Read;
 //use uuid::Uuid;
 //use std::time::{Instant};
 #[derive(Clone)]
@@ -11,10 +14,56 @@ pub struct AppState {
     pub min_cpu_usage_in_milliseconds: u64,
     pub  max_cpu_usage_in_milliseconds: u64, 
     pub adaptorhosturl: String,
+    pub firstsupplierdata: String,
     
  }
 
-pub fn load_config_data() -> Result<AppState,&'static str> {
+ pub fn load_file() -> Result<Vec<String>, ProcessorCallError>{
+
+    let mut count = 0;
+    let mut filecontent: Vec<String> = Vec::new();
+    let directory = r"xmls";
+    if let Ok(entries) = fs::read_dir(directory) {
+        for entry in entries {
+            if let Ok(entry) = entry {
+                let path = entry.path();
+                if path.is_file() && path.extension().unwrap_or_default() == "xml" {
+                    let mut file =  match fs::File::open(&path)
+                    {
+                        Ok(file) => file,
+                        Err(e) => {
+                            println!("Error opening file: {}", e);
+                            return Err(ProcessorCallError::FileOpenError);
+                        }
+                    };
+                    let mut content = String::new();
+                    match file.read_to_string(&mut content)
+                    {
+                        Ok(_) => {    
+                           // println!("File content: {}", content);                     
+                            filecontent.push(content);                                   
+                        },
+                        Err(e) =>  {
+                            println!("Error reading file: {}", e);
+                            return Err(ProcessorCallError::FileRedaError);
+                        },
+                    }
+                    count = count + 1;
+                }
+            }
+            if count == 1 {
+               
+                break;
+            }
+        }
+
+      
+    }
+    Ok(filecontent)
+}
+
+
+pub fn load_config_data(supplierdata: String) -> Result<AppState,&'static str> {
 
     let app_ini = ini!(r"app.ini");
     let min_noofsuppliers_forrandomness  = match app_ini["section1"]["minnoofsuppliersforrandomness"].as_ref() 
@@ -76,7 +125,8 @@ pub fn load_config_data() -> Result<AppState,&'static str> {
     max_noofsuppliers_forrandomness: max_noofsuppliers_forrandomness.parse::<u64>().unwrap(),
     min_cpu_usage_in_milliseconds: min_cpu_usage_in_milliseconds.parse::<u64>().unwrap(),
     max_cpu_usage_in_milliseconds: max_cpu_usage_in_milliseconds.parse::<u64>().unwrap(),    
-    adaptorhosturl: addaptorhosturl.clone()
+    adaptorhosturl: addaptorhosturl.clone(),
+    firstsupplierdata: supplierdata.clone()
 }) 
 }
 
