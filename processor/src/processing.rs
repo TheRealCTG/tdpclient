@@ -57,7 +57,7 @@ pub async fn get_accomodation_handler(data: web::Data<AppState>) -> impl Respond
     let mut handles = Vec::new();        
   
     let result =  Arc::new(Mutex::new(String::with_capacity(50000)));
-    let simulatedatares =  Arc::new(Mutex::new(String::with_capacity(5000)));
+
     let counter = Arc::new(AtomicUsize::new(0));
 
    // println!("get_accomodations called=>enumerate suppliers {}",  suppliers.len());  
