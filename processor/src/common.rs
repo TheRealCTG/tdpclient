@@ -7,7 +7,7 @@ use std::fs;
 use std::io::Read;
 //use uuid::Uuid;
 //use std::time::{Instant};
-#[derive(Clone)]
+
 pub struct AppState {
     pub min_noofsuppliers_forrandomness: u64,
     pub  max_noofsuppliers_forrandomness: u64,
@@ -133,11 +133,10 @@ pub fn load_config_data(supplierdata: String) -> Result<AppState,&'static str> {
 
 
 
-pub fn simulate_cpu_usage(ref xml_document:String, confidata: AppState) {  
-    let max_cpu_usage_for_in_milliseconds = confidata.max_cpu_usage_in_milliseconds;
-    let min_cpu_usage_for_in_milliseconds = confidata.min_cpu_usage_in_milliseconds;
+pub  fn simulate_cpu_usage(ref xml_document: &String,  max_cpu_usage_in_milliseconds:u64,  min_cpu_usage_in_milliseconds: u64) {  
+   
     let mut rng = thread_rng();
-    let delayduration = rng.gen_range(min_cpu_usage_for_in_milliseconds..max_cpu_usage_for_in_milliseconds);
+    let delayduration = rng.gen_range(min_cpu_usage_in_milliseconds..max_cpu_usage_in_milliseconds);
 
     let loop_till_time = std::time::Instant::now() +  std::time::Duration::from_millis(delayduration);
    
